@@ -12,7 +12,7 @@
 #include "Clock.hpp"
 
 #define NUM_OF_ELEMENTS 10000
-#define NUM_OF_INSTANCES 12
+#define NUM_OF_INSTANCES 50
 
 template<typename T>
 void printArray(T arr[], std::size_t size) {
@@ -47,7 +47,7 @@ template<typename T>
 bool isSorted(T arr[], std::size_t size) {
 	for(int i = 0; i < size - 2; i++) {
 		if(arr[i] > arr[i+1]){
-			printf("%f !> %f \n", arr[i], arr[i+1]);
+			printf("%i !> %i \n", arr[i], arr[i+1]);
 			return false;
 		}
 	}
@@ -76,7 +76,6 @@ void benchAlgorithm(const char* name, std::function<void(int*, std::size_t)> alg
 	for(int i = 0; i < NUM_OF_INSTANCES; i++) {
 		times_total += testAlgorithm(name, algorithm);
 	}
-	printf("\n\t%s Avg. Time: %fms\n", name, times_total / NUM_OF_INSTANCES);
 	avg_times[times_total / NUM_OF_INSTANCES] = name;
 }
 
@@ -86,15 +85,18 @@ int main(int argc, char* argv[]) {
 	benchAlgorithm("SelectionSortOptimized", selectionSortOptimized<int>);
 	benchAlgorithm("BubbleSort", bubbleSort<int>);
 	benchAlgorithm("BubbleSortOptimized", bubbleSortOptimized<int>);
+	benchAlgorithm("insertionSort", insertionSort<int>);
 
 	double min_time = INT_MAX;
 
+	printf("\n Average Times: \n");
 	for(std::pair<double, const char*> pair : avg_times) {
+		printf("\t%s: %fms\n", pair.second, pair.first);
 		if(pair.first < min_time)
 			min_time = pair.first;
 	}
 
-	printf("WINNER IS %s at %fms\n", avg_times[min_time], min_time);
+	printf("\nWINNER IS %s at %fms\n", avg_times[min_time], min_time);
 	return EXIT_SUCCESS;
 
 }
